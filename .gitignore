@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# App-specific secrets
+/gravatarcontacts/token.pickle
+/gravatarcontacts/credentials.json
