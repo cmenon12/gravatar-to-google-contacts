@@ -63,7 +63,7 @@ class Contact:
         if they are invalid) then a browser window is opened to ask the user
         to authenticate using a Google Account. Because this app uses
         sensitive scopes, user's are warned before authenticating unless
-        the Google Cloud Project app has been approved by Google.
+        the Google Cloud Platform app has been approved by Google.
 
         :return: the People API service (a Resource)
         """

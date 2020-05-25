@@ -1,7 +1,7 @@
 """
 Script to update a user's Google contacts with Gravatar photos.
 
-This script will first ask a user to grant the Google Cloud Project app
+This script will first ask a user to grant the Google Cloud Platform app
 access to their contacts in their Google Account. It will then download
 all of their contacts and filter out those with an email address.
 
