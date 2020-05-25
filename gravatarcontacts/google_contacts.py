@@ -42,6 +42,10 @@ TOKEN_PICKLE_FILE = "token.pickle"
 class Contact:
     """
     Facilitates interaction with the Google People API.
+    
+    Portions of this class are modifications based on work created
+    and shared by Google and used according to terms described in the
+    Apache 2.0 License Attribution License.
     """
 
     def __init__(self, res_name: str, name: str, emails: list,
