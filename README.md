@@ -8,7 +8,8 @@ For each email address in each contact it will attempt to download the correspon
 
 This program will not update contacts that already have a user-supplied photo that didn't previously come from Gravatar.
 
-## Setup
+## Installation & Setup
+You can install the absolute latest version using `pip install git+https://github.com/cmenon12/gravatar-to-google-contacts`.
 
 ### Dependencies
 Note that the versions specified here are what I have been running it on, it may well work on older versions.
@@ -31,7 +32,7 @@ Creating your own project helps to keep your contacts safe because you control t
 
 
 ## Usage
-`python gravatarcontacts` will run the program. Where necessary, the browser window and GUI will open automatically so this program should be run locally (and not over SSH for example).
+`python -m gravatarcontacts` will run the program after installation. Where necessary, the browser window and GUI will open automatically so this program should be run locally (and not over SSH for example).
 
 ## License
 [GNU GPLv3](https://choosealicense.com/licenses/gpl-3.0/)
