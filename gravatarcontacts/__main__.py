@@ -1,12 +1,35 @@
-import google_contacts
-from gravatar import Gravatar
-import tkinter
-from PIL import Image
-from io import BytesIO
+"""
+Script to update a user's Google contacts with Gravatar photos.
+
+This script will first ask a user to grant the Google Cloud Project app
+access to their contacts in their Google Account. It will then download
+all of their contacts and filter out those with an email address.
+
+For each email address it will attempt to download a Gravatar photo. If
+a Gravatar photo is found for that contact then it will update the
+contact with that photo. If there are multiple possible Gravatar photos
+(due to a contact having multiple email addresses then a GUI will be
+presented to choose one. The user is notified which contacts have been
+updated, and those contacts have the custom Gravatar Photo field set
+to True (so that the program can safely update them in the future).
+
+This program will not update contacts that already have a user-supplied
+photo that didn't previously come from Gravatar.
+"""
 import base64
-from functools import partial
 import logging
-from constants import *
+import tkinter
+from functools import partial
+from io import BytesIO
+
+from PIL import Image
+
+from gravatarcontacts.google_contacts import Contact
+from gravatarcontacts.gravatar import Gravatar, MAX_RATING
+
+__author__ = "Christopher Menon"
+__credits__ = "Christopher Menon"
+__license__ = "gpl-3.0"
 
 # Prepare the log
 logging.basicConfig(filename="gravatarcontacts.log",
@@ -15,11 +38,16 @@ logging.basicConfig(filename="gravatarcontacts.log",
                     level=logging.DEBUG)
 
 
-def main():
+def main() -> None:
+    """
+    Updates a user's Google contacts with Gravatar photos.
+
+    :return: None
+    """
 
     # Connect to the service and fetch a list of the contacts
-    service = google_contacts.authorize()
-    contacts = google_contacts.list_contacts(service)
+    service = Contact.authorize()
+    contacts = Contact.list_contacts(service)
 
     # Get a Gravatar image for each email address in each contact
     # This will not save the image where it wasn't available
@@ -27,7 +55,7 @@ def main():
         if contact.has_user_photo is False or \
                 contact.is_gravatar is True:
             for email in contact.emails:
-                gravatar_image = Gravatar(email).\
+                gravatar_image = Gravatar(email). \
                     download_image(MAX_RATING)
                 if gravatar_image:
                     contact.gravatar_images.append(gravatar_image)
@@ -43,7 +71,7 @@ def main():
             continue
 
         # Choose one if there are too many
-        elif len(contact.gravatar_images) >= 2:
+        if len(contact.gravatar_images) >= 2:
             logging.info("Contact has 2+ Gravatars, need to choose.")
             chosen_image = contact.gravatar_images[
                 choose_image(contact.name, contact.gravatar_images)]
@@ -56,16 +84,33 @@ def main():
 
 
 def make_choice(root: tkinter.Tk, value: int):
+    """
+    Accepts the user's choice from the GUI and saves it as a global.
+    :param root: the Tkinter GUI
+    :param value: the chosen value
+    :return: None
+    """
 
     # Save the choice and close the window
     global answer
     answer = value
     root.destroy()
     logging.info("Answer chosen, Tkinter window destroyed.")
-    logging.debug("User chose " + str(value))
+    logging.debug("User chose %d", value)
 
 
 def choose_image(name: str, images: list) -> int:
+    """
+    Creates a GUI to choose a photo.
+
+    This function creates a Tkinter GUI to prompt the user to choose a
+    photo from the images list. If the user doesn't choose one and
+    closes the window then the first is picked anyway (0 is returned).
+
+    :param name: the contact name
+    :param images: a list of the images as base64 strings
+    :return: the index of the chosen image
+    """
 
     # Using a default value of 0 in case they just close it
     global answer
@@ -96,7 +141,7 @@ def choose_image(name: str, images: list) -> int:
                                                       root, counter)))
         buttons[counter].photo = image_gui_obj
         buttons[counter].grid(row=2, column=counter)
-        logging.info("Button created for image " + str(counter))
+        logging.info("Button created for image %d", counter)
         counter += 1
 
     # Display the GUI and get an answer

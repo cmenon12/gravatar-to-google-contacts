@@ -9,6 +9,11 @@ from typing import Union
 import libgravatar
 import requests
 
+__author__ = "Christopher Menon"
+__credits__ = ["Christopher Menon",
+               "https://github.com/pabluk/libgravatar"]
+__license__ = "gpl-3.0"
+
 # The max rating of the Gravatar
 # One of g, pg, r, or x
 MAX_RATING = "g"
@@ -19,7 +24,7 @@ RESOLUTION = 720
 
 class Gravatar(libgravatar.Gravatar):
     """
-    This class facilitates access to the Gravatar API.
+    Dacilitates access to the Gravatar API.
 
     This class extends the libgravatar.Gravatar class by providing an
     instance method to download an image.
@@ -46,7 +51,7 @@ class Gravatar(libgravatar.Gravatar):
         image_url = super(Gravatar, self).get_image(RESOLUTION, "404", False,
                                                     rating, True, True)
         logging.info("Gravatar URL calculated.")
-        logging.debug("URL is {}".format(image_url))
+        logging.debug("URL is %s", image_url)
 
         try:
             # Download the image
