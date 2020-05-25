@@ -1,17 +1,19 @@
 """
 Script to update a user's Google contacts with Gravatar photos.
 
-This script will first ask a user to grant the Google Cloud Platform app
-access to their contacts in their Google Account. It will then download
-all of their contacts and filter out those with an email address.
+When run as a script (by running __main__.py) the program will first
+ask a user to grant the Google Cloud Platform app access to their
+contacts in their Google Account. It will then download all of their
+contacts and remove those that don't have an email address and a name.
 
-For each email address it will attempt to download a Gravatar photo. If
-a Gravatar photo is found for that contact then it will update the
-contact with that photo. If there are multiple possible Gravatar photos
-(due to a contact having multiple email addresses then a GUI will be
-presented to choose one. The user is notified which contacts have been
-updated, and those contacts have the custom Gravatar Photo field set
-to True (so that the program can safely update them in the future).
+For each email address in each contact it will attempt to download the
+corresponding Gravatar photo. If a Gravatar photo is found for that
+contact then it will update the contact with that photo. If there are
+multiple possible Gravatar photos (due to a contact having multiple
+email addresses then a GUI will be presented to choose one. The user
+is notified which contacts have been updated, and those contacts have
+the custom Gravatar Photo field set to "True" (so that the program
+can safely update them in the future).
 
 This program will not update contacts that already have a user-supplied
 photo that didn't previously come from Gravatar.
