@@ -1,33 +1,21 @@
-from dotenv import load_dotenv
-from pathlib import Path
+import googleapiclient
 import os
 import pickle
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
-
-env_path = Path(os.getcwd()).parent.absolute() / ".env"
-load_dotenv(dotenv_path=env_path)
-API_KEY = os.getenv("GOOGLE_CLOUD_API_KEY_FOR_PEOPLE_API")
-
-# This variable specifies the name of a file that contains the OAuth 2.0
-# information for this application, including its client_id and client_secret.
-CLIENT_SECRETS_FILE = "credentials.json"
-
-# This OAuth 2.0 access scope allows for full read/write access to the
-# authenticated user's account and requires requests to use an SSL connection.
-SCOPES = ["https://www.googleapis.com/auth/contacts"]
-API_SERVICE_NAME = 'contacts'
-API_VERSION = 'v1'
+import logging
+from constants import *
 
 
-def authorize():
+def authorize() -> googleapiclient.discovery.Resource:
     """Shows basic usage of the People API.
     Prints the name of the first 10 connections.
     """
     credentials = None
-    # The file token.pickle stores the user's access and refresh tokens, and is
-    # created automatically when the authorization flow completes for the first
+    # The file token.pickle stores the user's access and refresh tokens,
+    # and is created automatically when the authorization flow completes
+    # for the first
     # time.
     if os.path.exists('token.pickle'):
         with open('token.pickle', 'rb') as token:
@@ -41,15 +29,16 @@ def authorize():
                 CLIENT_SECRETS_FILE, SCOPES)
             credentials = flow.run_local_server(port=0)
         # Save the credentials for the next run
-        with open('token.pickle', 'wb') as token:
+        with open(TOKEN_PICKLE_FILE, "wb") as token:
             pickle.dump(credentials, token)
 
     service = build('people', 'v1', credentials=credentials)
+    logging.info("People API service created.")
 
     return service
 
 
-def list_contacts(service):
+def list_contacts(service: googleapiclient.discovery.Resource) -> list:
     # Fetch the user's contacts (names and emails)
     # This can fetch up to 2000
     results = service.people().connections().list(
@@ -57,6 +46,7 @@ def list_contacts(service):
         pageSize=2000,
         personFields='names,emailAddresses,photos,UserDefined').execute()
     connections = results.get('connections', [])
+    logging.info("Contacts retrieved.")
     contacts = []
 
     for contact in connections:
@@ -70,6 +60,7 @@ def list_contacts(service):
         if "names" in contact:
             name = contact["names"][0]["displayName"]
         else:
+            logging.info("Contact skipped.")
             continue
 
         # Get the email
@@ -79,15 +70,18 @@ def list_contacts(service):
             for email in contact["emailAddresses"]:
                 emails.append(email["value"])
         else:
+            logging.info("Contact skipped.")
             continue
 
         # Determine if the contact already has a user-supplied photo
-        # This will stay false if it has a photo from their Google profile
-        # photo["default"] is only present if it's true, so if it's not there then this is not the default
+        # This will stay false there's a photo from their Google profile
+        # photo["default"] is only present if it's true,
+        # so if it's not there then this is not the default
         has_user_photo = False
         if "photos" in contact:
             for photo in contact["photos"]:
-                if photo["metadata"]["source"]["type"] == "CONTACT" and "default" not in photo:
+                if photo["metadata"]["source"]["type"] == "CONTACT" and \
+                        "default" not in photo:
                     has_user_photo = True
 
         # Determine if that photo was already supplied from Gravatar
@@ -95,18 +89,24 @@ def list_contacts(service):
         is_gravatar = False
         if "userDefined" in contact:
             for custom in contact["userDefined"]:
-                if custom["key"] == "Gravatar Photo" and custom["value"] == "True":
+                if custom["key"] == "Gravatar Photo" and \
+                        custom["value"] == "True":
                     is_gravatar = True
 
         # Save this contact's details
-        contacts.append(Contact(contact_res_name, name, emails, has_user_photo, is_gravatar, etag))
+        contacts.append(Contact(contact_res_name, name, emails,
+                                has_user_photo, is_gravatar, etag))
+        logging.info("New contact saved with resource name")
+        logging.debug("New contact called " + name + " with res_name " +
+                      contact_res_name)
 
     return contacts
 
 
 class Contact:
 
-    def __init__(self, res_name, name, emails, has_user_photo, is_gravatar, etag):
+    def __init__(self, res_name: str, name: str, emails: list,
+                 has_user_photo: bool, is_gravatar: bool, etag: str):
         self.res_name = res_name
         self.name = name
         self.emails = emails
@@ -115,7 +115,11 @@ class Contact:
         self.gravatar_images = []
         self.etag = etag
 
-    def update_photo(self, service, new_photo):
+    def update_photo(self, service: googleapiclient.discovery.Resource,
+                     new_photo: str) -> bool:
+
+        logging.debug("Updating photo for " + self.name +
+                      " with res_name " + self.res_name)
 
         try:
 
@@ -124,12 +128,15 @@ class Contact:
                 resourceName=self.res_name,
                 updatePersonFields="userDefined",
                 body={"etag": self.etag,
-                      "userDefined": [{"key": "Gravatar Photo", "value": "True"}]}).execute()
+                      "userDefined": [{"key": "Gravatar Photo",
+                                       "value": "True"}]}).execute()
+            logging.info("Contact updated with custom field Gravatar=True.")
 
             # Update the photo
             service.people().updateContactPhoto(
                 resourceName=self.res_name,
                 body={"photoBytes": new_photo}).execute()
+            logging.info("Contact photo updated.")
 
             return True
         except Exception as e:

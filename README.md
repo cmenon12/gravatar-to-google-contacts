@@ -1,2 +1,2 @@
-# gravatar-to-contacts
-Used to copy Gravatar profile pictures and information to your contacts.
+# Gravatar to Google Contacts
+Used to copy Gravatar profile pictures to your Google Contacts.
