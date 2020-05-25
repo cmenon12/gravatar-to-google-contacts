@@ -1,6 +1,11 @@
 # Gravatar to Google Contacts
 This is a Python package to copy Gravatar profile pictures to your Google Contacts.
 
+[![GitHub issues](https://img.shields.io/github/issues/cmenon12/gravatar-to-google-contacts?style=flat)](https://github.com/cmenon12/gravatar-to-google-contacts/issues)
+[![GitHub forks](https://img.shields.io/github/forks/cmenon12/gravatar-to-google-contacts?style=flat)](https://github.com/cmenon12/gravatar-to-google-contacts/network)
+[![GitHub stars](https://img.shields.io/github/stars/cmenon12/gravatar-to-google-contacts?style=flat)](https://github.com/cmenon12/gravatar-to-google-contacts/stargazers)
+[![GitHub license](https://img.shields.io/github/license/cmenon12/gravatar-to-google-contacts?style=flat)](https://github.com/cmenon12/gravatar-to-google-contacts/blob/master/LICENSE)
+
 ## Description
 When run as a script (by running `__main__.py`) the program will first ask a user to grant the Google Cloud Platform app access to their contacts in their Google Account. It will then download all of their contacts and remove those that don't have an email address and a name.
 
@@ -36,5 +41,3 @@ Creating your own project helps to keep your contacts safe because you control t
 
 ## License
 [GNU GPLv3](https://choosealicense.com/licenses/gpl-3.0/)
-
-
