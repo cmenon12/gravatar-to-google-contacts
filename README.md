@@ -12,7 +12,7 @@ For each email address in each contact it will attempt to download the correspon
 This program will not update contacts that already have a user-supplied photo that didn't previously come from Gravatar.
 
 ## Installation & Setup
-You can install it using `pip install gravatarcontacts-cmenon12`. Alternatively, if you really want to you can grab the absolute latest version using `pip install git+https://github.com/cmenon12/gravatar-to-google-contacts`.
+You can install it using `pip install gravatarcontacts-cmenon12`.
 
 ### Dependencies
 Note that the versions specified here are what I have been running it on, it may well work on older versions.
