@@ -16,13 +16,13 @@ You can install it using `pip install gravatarcontacts-cmenon12`.
 
 ### Dependencies
 Note that the versions specified here are what I have been running it on, it may well work on older versions.
-* Python>=3.7.4
+* Python>=3.7
 * requests>=2.23.0
 * google_api_python_client>=1.8.3
 * google_auth_oauthlib>=0.4.1
 * libgravatar>=0.2.3
 * Pillow>=7.1.2
-* protobuf>=3.12.1
+* protobuf>=3.11.0
 
 ### Creating a Google Cloud Platform Project and enabling the People API 
 You will need to create your own Google Cloud Platform Project, enable the People API, and create & download some OAuth 2.0 Client ID credentials as `credentials.json`. 
