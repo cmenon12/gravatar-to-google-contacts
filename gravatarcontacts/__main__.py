@@ -80,9 +80,10 @@ def main() -> None:
             contact.gravatar_images = [chosen_image]
 
         # Update the photo
-        contact.update_photo(service, contact.gravatar_images[0])
-
-        print("Gravatar added for", contact.name)
+        if contact.update_photo(service, contact.gravatar_images[0]) is True:
+            print("Gravatar added for", contact.name)
+        else:
+            print("Gravatar could not be added for", contact.name)
 
 
 def make_choice(root: tkinter.Tk, value: int):
@@ -154,6 +155,9 @@ def choose_image(name: str, images: list) -> int:
     root.mainloop()
     value = answer
     del answer
+
+    assert 0 <= value < len(images)
+
     return value
 
 

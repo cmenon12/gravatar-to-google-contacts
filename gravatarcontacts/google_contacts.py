@@ -38,11 +38,13 @@ API_VERSION = "v1"
 # time. This specifies where the file is stored
 TOKEN_PICKLE_FILE = "token.pickle"
 
+LOGGER = logging.getLogger(__name__)
+
 
 class Contact:
     """
     Facilitates interaction with the Google People API.
-    
+
     Portions of this class are modifications based on work created
     and shared by Google and used according to terms described in the
     Apache 2.0 License Attribution License.
@@ -94,7 +96,10 @@ class Contact:
 
         # Create and return the authenticated service
         service = build('people', 'v1', credentials=credentials)
-        logging.info("People API service created.")
+        LOGGER.info("People API service created.")
+
+        assert os.path.exists(TOKEN_PICKLE_FILE)
+
         return service
 
     @staticmethod
@@ -115,7 +120,7 @@ class Contact:
             pageSize=2000,
             personFields='names,emailAddresses,photos,UserDefined').execute()
         connections = results.get('connections', [])
-        logging.info("Contacts retrieved.")
+        LOGGER.info("Contacts retrieved.")
         contacts = []
 
         for contact in connections:
@@ -132,7 +137,7 @@ class Contact:
                 for email in contact["emailAddresses"]:
                     emails.append(email["value"])
             else:
-                logging.info("Contact skipped.")
+                LOGGER.info("Contact skipped.")
                 continue
 
             # Determine if the contact already has a user-supplied photo
@@ -155,12 +160,15 @@ class Contact:
                             custom["value"] == "True":
                         is_gravatar = True
 
+            assert has_user_photo is True or \
+                   (has_user_photo is False and is_gravatar is False)
+
             # Save this contact's details
             contacts.append(Contact(res_name, name, emails,
                                     has_user_photo, is_gravatar, etag))
-            logging.info("New contact saved")
-            logging.debug("New contact called %s with res name %s",
-                          name, res_name)
+            LOGGER.info("New contact saved")
+            LOGGER.debug("New contact called %s with res name %s",
+                         name, res_name)
 
         return contacts
 
@@ -178,8 +186,8 @@ class Contact:
         :return: True on success, False on failure
         """
 
-        logging.debug("Updating photo for %s with res name %s",
-                      self.name, self.res_name)
+        LOGGER.debug("Updating photo for %s with res name %s",
+                     self.name, self.res_name)
 
         try:
 
@@ -190,13 +198,13 @@ class Contact:
                 body={"etag": self.etag,
                       "userDefined": [{"key": "Gravatar Photo",
                                        "value": "True"}]}).execute()
-            logging.info("Contact updated with custom field Gravatar=True.")
+            LOGGER.info("Contact updated with custom field Gravatar=True.")
 
             # Update the photo
             service.people().updateContactPhoto(
                 resourceName=self.res_name,
                 body={"photoBytes": new_photo}).execute()
-            logging.info("Contact photo updated.")
+            LOGGER.info("Contact photo updated.")
 
             return True
 

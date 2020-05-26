@@ -21,6 +21,8 @@ MAX_RATING = "g"
 # The resolution of the Gravatar that's downloaded (in px)
 RESOLUTION = 720
 
+LOGGER = logging.getLogger(__name__)
+
 
 class Gravatar(libgravatar.Gravatar):
     """
@@ -29,10 +31,6 @@ class Gravatar(libgravatar.Gravatar):
     This class extends the libgravatar.Gravatar class by providing an
     instance method to download an image.
     """
-
-    def __init__(self, email: str):
-        self.logger = logging.getLogger(__name__)
-        super(Gravatar, self).__init__(email)
 
     def download_image(self, rating: str = MAX_RATING) -> Union[bool, str]:
         """
@@ -50,21 +48,23 @@ class Gravatar(libgravatar.Gravatar):
         # Get the URL of the image
         image_url = super(Gravatar, self).get_image(RESOLUTION, "404", False,
                                                     rating, True, True)
-        logging.info("Gravatar URL calculated.")
-        logging.debug("URL is %s", image_url)
+        LOGGER.info("Gravatar URL calculated.")
+        LOGGER.debug("URL is %s", image_url)
 
         try:
             # Download the image
             r = requests.get(image_url)
             r.raise_for_status()
-            logging.info("Image successfully downloaded.")
+            LOGGER.info("Image successfully downloaded.")
 
             # Convert to base64 and return
             image_bytes = base64.b64encode(r.content)
+            image_str = image_bytes.decode("utf-8")
+            assert isinstance(image_str, str)
 
-            return image_bytes.decode("utf-8")
+            return image_str
 
         # Catch any exception and don't return the raw response
         except requests.RequestException as err:
-            logging.info(err)
+            LOGGER.info(err)
             return False
