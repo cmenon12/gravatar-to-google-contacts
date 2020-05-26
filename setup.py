@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="gravatarcontacts-cmenon12",
-    version="1.0.1",
+    version="1.0.4",
     author="Christopher Menon",
     description="A package to copy Gravatar profile pictures to your "
                 "Google Contacts.",
@@ -21,11 +21,11 @@ setuptools.setup(
         "Operating System :: OS Independent",
         "Natural Language :: English"
     ],
-    python_requires='>=3.7.4',
+    python_requires='>=3.7',
     install_requires=["requests>=2.23.0",
                       "google_api_python_client>=1.8.3",
                       "google_auth_oauthlib>=0.4.1",
                       "libgravatar>=0.2.3",
                       "Pillow>=7.1.2",
-                      "protobuf>=3.12.1"]
+                      "protobuf>=3.11.0"]
 )
