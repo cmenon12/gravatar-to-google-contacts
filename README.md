@@ -2,19 +2,17 @@
 This is a Python package to copy Gravatar profile pictures to your Google Contacts.
 
 [![GitHub issues](https://img.shields.io/github/issues/cmenon12/gravatar-to-google-contacts?style=flat)](https://github.com/cmenon12/gravatar-to-google-contacts/issues)
-[![GitHub forks](https://img.shields.io/github/forks/cmenon12/gravatar-to-google-contacts?style=flat)](https://github.com/cmenon12/gravatar-to-google-contacts/network)
-[![GitHub stars](https://img.shields.io/github/stars/cmenon12/gravatar-to-google-contacts?style=flat)](https://github.com/cmenon12/gravatar-to-google-contacts/stargazers)
 [![GitHub license](https://img.shields.io/github/license/cmenon12/gravatar-to-google-contacts?style=flat)](https://github.com/cmenon12/gravatar-to-google-contacts/blob/master/LICENSE)
 
 ## Description
 When run as a script (by running `__main__.py`) the program will first ask a user to grant the Google Cloud Platform app access to their contacts in their Google Account. It will then download all of their contacts and remove those that don't have an email address and a name.
 
-For each email address in each contact it will attempt to download the corresponding Gravatar photo. If a Gravatar photo is found for that contact then it will update the contact with that photo. If there are multiple possible Gravatar photos (due to a contact having multiple email addresses then a GUI will be presented to choose one. The user is notified which contacts have been updated, and those contacts have the custom `Gravatar Photo` field set to `"True"` (so that the program can safely update them in the future).
+For each email address in each contact it will attempt to download the corresponding Gravatar photo. If a Gravatar photo is found for that contact then it will update the contact with that photo. If there are multiple possible Gravatar photos (due to a contact having multiple email addresses) then a GUI will be presented to choose one. The user is notified which contacts have been updated, and those contacts have the custom `Gravatar Photo` field set to `"True"` (so that the program can safely update them in the future).
 
 This program will not update contacts that already have a user-supplied photo that didn't previously come from Gravatar.
 
 ## Installation & Setup
-You can install the absolute latest version using `pip install git+https://github.com/cmenon12/gravatar-to-google-contacts`.
+You can install it using `pip install gravatarcontacts-cmenon12`. Alternatively, if you really want to you can grab the absolute latest version using `pip install git+https://github.com/cmenon12/gravatar-to-google-contacts`.
 
 ### Dependencies
 Note that the versions specified here are what I have been running it on, it may well work on older versions.
@@ -26,14 +24,14 @@ Note that the versions specified here are what I have been running it on, it may
 * Pillow>=7.1.2
 * protobuf>=3.12.1
 
-### Creating a new Google Cloud Platform Project and enabling the People API 
+### Creating a Google Cloud Platform Project and enabling the People API 
 You will need to create your own Google Cloud Platform Project, enable the People API, and create & download some OAuth 2.0 Client ID credentials as `credentials.json`. 
 
-If you've not used Google Cloud Platform before then you can do all of this really easily by clicking on the large blue button labelled `Enable the People API` [here](https://developers.google.com/people/quickstart/python#step_1_turn_on_the). Choose to create a `Desktop app` and as per those instructions in resulting dialog click **DOWNLOAD CLIENT CONFIGURATION** and save the file `credentials.json` to your working directory.
+If you've not used Google Cloud Platform before then you can do all of this really easily by clicking on the large blue button labelled `Enable the People API` [here](https://developers.google.com/people/quickstart/python#step_1_turn_on_the). Choose to create a `Desktop app` and as per the instructions there in the resulting dialog click **DOWNLOAD CLIENT CONFIGURATION** and save the file `credentials.json` to where you're working. You mustn't share `credentials.json` or `token.pickle` with anyone.
 
 Use of the Google People API is (at the time of writing) free.
 
-Creating your own project helps to keep your contacts safe because you control the app that is asking to access them (and you can see my all of my source code here). You can revoke your app from accessing your contacts at [https://myaccount.google.com/permissions](https://myaccount.google.com/permissions). 
+Creating your own project helps to keep your contacts safe because you control the app that is asking to access them (and you can see my all of my source code here). You can stop your app accessing your contacts by revoking it at [https://myaccount.google.com/permissions](https://myaccount.google.com/permissions). 
 
 
 ## Usage
@@ -41,3 +39,4 @@ Creating your own project helps to keep your contacts safe because you control t
 
 ## License
 [GNU GPLv3](https://choosealicense.com/licenses/gpl-3.0/)
+
