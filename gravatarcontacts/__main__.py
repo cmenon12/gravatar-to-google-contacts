@@ -1,5 +1,4 @@
-"""
-Script to update a user's Google contacts with Gravatar photos.
+"""Script to update a user's Google contacts with Gravatar photos.
 
 When run as a script (by running __main__.py) the program will first
 ask a user to grant the Google Cloud Platform app access to their
@@ -27,7 +26,7 @@ from io import BytesIO
 from PIL import Image
 
 from gravatarcontacts.google_contacts import Contact
-from gravatarcontacts.gravatar import Gravatar, MAX_RATING
+from gravatarcontacts.gravatar import Gravatar
 
 __author__ = "Christopher Menon"
 __credits__ = "Christopher Menon"
@@ -41,10 +40,10 @@ logging.basicConfig(filename="gravatarcontacts.log",
 
 
 def main() -> None:
-    """
-    Updates a user's Google contacts with Gravatar photos.
+    """Updates a user's Google contacts with Gravatar photos.
 
     :return: None
+    :rtype: None
     """
 
     # Connect to the service and fetch a list of the contacts
@@ -58,7 +57,7 @@ def main() -> None:
                 contact.is_gravatar is True:
             for email in contact.emails:
                 gravatar_image = Gravatar(email). \
-                    download_image(MAX_RATING)
+                    download_image()
                 if gravatar_image:
                     contact.gravatar_images.append(gravatar_image)
 
@@ -87,11 +86,14 @@ def main() -> None:
 
 
 def make_choice(root: tkinter.Tk, value: int):
-    """
-    Accepts the user's choice from the GUI and saves it as a global.
+    """Accepts the user's choice from the GUI and saves it as a global.
+
     :param root: the Tkinter GUI
+    :type root: class:`tkinter.Tk`
     :param value: the chosen value
+    :type value: int
     :return: None
+    :rtype: None
     """
 
     # Save the choice and close the window
@@ -103,16 +105,18 @@ def make_choice(root: tkinter.Tk, value: int):
 
 
 def choose_image(name: str, images: list) -> int:
-    """
-    Creates a GUI to choose a photo.
+    """Creates a GUI to choose a photo.
 
     This function creates a Tkinter GUI to prompt the user to choose a
     photo from the images list. If the user doesn't choose one and
     closes the window then the first is picked anyway (0 is returned).
 
     :param name: the contact name
+    :type name: str
     :param images: a list of the images as base64 strings
+    :type images: list
     :return: the index of the chosen image
+    :rtype: int
     """
 
     # Using a default value of 0 in case they just close it

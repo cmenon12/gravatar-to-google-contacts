@@ -1,5 +1,4 @@
-"""
-Facilitates access to Google Contacts using the People API
+"""Facilitates access to Google Contacts using the People API
 
 This module connects to the People API, allowing you to download a list
 of contacts for the purpose of updating their photos. Each downloaded
@@ -42,16 +41,30 @@ LOGGER = logging.getLogger(__name__)
 
 
 class Contact:
-    """
-    Facilitates interaction with the Google People API.
+    """Facilitates interaction with the Google People API.
 
     Portions of this class are modifications based on work created
     and shared by Google and used according to terms described in the
     Apache 2.0 License Attribution License.
+
+    :param res_name: the resource name of the contact
+    :type res_name: str
+    :param name: the displayName of the contact
+    :type name: str
+    :param emails: the email addresses of the contact
+    :type emails: list
+    :param has_user_photo: `True` if it has a user-supplied photo
+    :type has_user_photo: bool
+    :param is_gravatar: `True` if the photo was previously from Gravatar
+    :type is_gravatar: bool
+    :param etag: the etag of the contact
+    :type etag: str
     """
 
     def __init__(self, res_name: str, name: str, emails: list,
                  has_user_photo: bool, is_gravatar: bool, etag: str):
+        """Constructor method.
+        """
         self.res_name = res_name
         self.name = name
         self.emails = emails
@@ -62,8 +75,7 @@ class Contact:
 
     @staticmethod
     def authorize() -> googleapiclient.discovery.Resource:
-        """
-        Connects to and authenticates the People API, returning the service.
+        """Connects to and authenticates the People API, returning the service.
 
         This function first checks for valid credentials, if none exist (or
         if they are invalid) then a browser window is opened to ask the user
@@ -72,6 +84,7 @@ class Contact:
         the Google Cloud Platform app has been approved by Google.
 
         :return: the People API service (a Resource)
+        :rtype: googleapiclient.discovery.Resource
         """
 
         credentials = None
@@ -104,14 +117,15 @@ class Contact:
 
     @staticmethod
     def list_contacts(service: googleapiclient.discovery.Resource) -> list:
-        """
-        Fetches the user's contacts as a list.
+        """Fetches the user's contacts as a list.
 
         This will fetch the user's contacts that have a name and an email
         address. It will return them as a list of Contact objects.
 
         :param service: the People API service (a Resource)
+        :type service: googleapiclient.discovery.Resource
         :return: a list of Contact objects
+        :rtype: list
         """
 
         # Fetch the user's contacts (up to 2000)
@@ -174,16 +188,18 @@ class Contact:
 
     def update_photo(self, service: googleapiclient.discovery.Resource,
                      new_photo: str) -> bool:
-        """
-        Updates the photo of the contact with the Gravatar photo.
+        """Updates the photo of the contact with the Gravatar photo.
 
         This method updates the photo of the contact with the supplied
         photo, and records that the photo came from Gravatar (by setting
         the custom Gravatar Photo field set to True.
 
         :param service: the People API service (a Resource)
+        :type service: googleapiclient.discovery.Resource
         :param new_photo: the new photo as a base-64 encoded string
-        :return: True on success, False on failure
+        :type new_photo: str
+        :return: `True` on success, `False` on failure
+        :rtype: bool
         """
 
         LOGGER.debug("Updating photo for %s with res name %s",

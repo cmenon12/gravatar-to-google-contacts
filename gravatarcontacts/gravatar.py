@@ -1,5 +1,4 @@
-"""
-A module that provides access to Gravatar APIs by extending libgravatar.
+"""Provides access to Gravatar APIs by extending libgravatar.
 """
 
 import base64
@@ -25,24 +24,23 @@ LOGGER = logging.getLogger(__name__)
 
 
 class Gravatar(libgravatar.Gravatar):
-    """
-    Dacilitates access to the Gravatar API.
+    """Facilitates access to the Gravatar API.
 
     This class extends the libgravatar.Gravatar class by providing an
     instance method to download an image.
     """
 
     def download_image(self, rating: str = MAX_RATING) -> Union[bool, str]:
-        """
-        Returns the image of the supplied Gravatar object.
+        """Returns the image of the supplied Gravatar object.
 
         This method will download the image for the specified Gravatar
         and return it as a base64 string. It will return False on
         failure.
-        :param rating: The maximum rating to accept (defaults to g,
-        the lowest).
-        :return: The image as a base64-encoded string, otherwise False
-        on failure.
+
+        :param rating: the max rating to accept
+        :type rating: str, optional
+        :return: The image as a base64 string or `False`on failure
+        :rtype: bool, str
         """
 
         # Get the URL of the image
