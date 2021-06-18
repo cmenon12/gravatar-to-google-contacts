@@ -1,0 +1,6 @@
+requests>=2.23.0
+google_api_python_client>=1.8.3
+google_auth_oauthlib>=0.4.1
+libgravatar>=0.2.3
+Pillow>=7.1.2
+protobuf>=3.11.0
